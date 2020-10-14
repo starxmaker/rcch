@@ -55,8 +55,8 @@ const  RegistroBody = React.forwardRef((props, ref) => {
             value:"0",
             label: "Seleccione"
         },
-        fldDestinatario: 0,
-        fldMedio:0,
+        fldDestinatario: 1,
+        fldMedio:1,
         fldTextos:0,
         fldTipo:"0"
     });
