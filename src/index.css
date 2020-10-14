@@ -1,3 +1,4 @@
+@import url('https://unpkg.com/bootstrap-darkmode@0.7.0/dist/darktheme.css');
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -7,7 +8,25 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.css-2b097c-container{
+  position: relative;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    width: 1%;
+    min-width: 0;
+    margin-bottom: 0;
+}
+
+.invalid{
+  border:1px solid #ff0000 !important
+  }
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+a.deco-none {
+  color: inherit;
+  text-decoration: none;
 }
