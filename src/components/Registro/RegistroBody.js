@@ -233,6 +233,9 @@ const  RegistroBody = React.forwardRef((props, ref) => {
                             <InputGroup.Append>
                                 <Button variant="outline-secondary" onClick={() => {openModalIngresar("publicador")}}><FontAwesomeIcon icon="plus-square"/></Button>                  
                                 <Button variant="outline-secondary" onClick={()=> handleModalOpen("publicadores")}><FontAwesomeIcon icon="pencil-alt" /></Button>
+                                <Button variant="outline-secondary" onClick={()=> handleModalOpen("lista")}><FontAwesomeIcon icon="ellipsis-h" /></Button>
+                               
+                                
                                 <ModalManage tipo="Publicadores" allElements={props.allPublicadores} ref={modalRefPublicadores}
                                         refreshData={props.refreshData} deleteFunction={deletePublicador}/>
                                 <ModalIngresar 
