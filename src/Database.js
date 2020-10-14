@@ -73,7 +73,7 @@ class Database{
 		a.click();
     }
     buildInitialTables(){
-       this.db.run("CREATE TABLE publicadores (id integer primary key autoincrement, nombre varchar(255) NOT NULL, isInvitado boolean);")
+       this.db.run("CREATE TABLE publicadores (id integer primary key autoincrement, nombre varchar(255) NOT NULL, grupo int(11) not null default '0', invitado boolean);")
        this.db.run("CREATE TABLE medio (id integer primary key autoincrement, nombre varchar(255) NOT NULL, color varchar(255));")
        this.db.run("CREATE TABLE publico (id integer primary key autoincrement, nombre varchar(255) NOT NULL, color varchar(255));")
        this.db.run("CREATE TABLE records (id integer primary key autoincrement, hora datetime not null, publicador integer not null, medio integer NOT NULL, publico integer not null, textos integer not null, tipo integer not null, FOREIGN KEY (publicador) REFERENCES publicadores(id) ON DELETE CASCADE,FOREIGN KEY (publico) REFERENCES publico(id) ON DELETE CASCADE, FOREIGN KEY (medio) REFERENCES medio(id) ON DELETE CASCADE);")

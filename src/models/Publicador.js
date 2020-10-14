@@ -1,14 +1,15 @@
 import {currentDatabase} from "../Database"
 class Publicador{
-    constructor(id,nombre, isInvitado){
+    constructor(id,nombre,grupo, invitado){
         this.id=id
         this.nombre=nombre
-        this.isInvitado=isInvitado
+        this.grupo=grupo
+        this.invitado=invitado
     }
-    static insert(nombre, isInvitado){
-            currentDatabase.executeCommand("insert into publicadores (nombre, isInvitado) values ('"+nombre+"', "+isInvitado+")")
+    static insert(nombre, grupo, isInvitado){
+            currentDatabase.executeCommand("insert into publicadores (nombre,grupo, invitado) values ('"+nombre+"',"+grupo+", "+isInvitado+")")
             let id=currentDatabase.getLastInsertedId("publicadores")
-            return new Publicador(id, nombre, isInvitado)
+            return new Publicador(id, nombre, grupo, isInvitado)
          
     }
     delete(){

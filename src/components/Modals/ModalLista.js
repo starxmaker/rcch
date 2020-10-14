@@ -55,6 +55,18 @@ const ModalLista= React.forwardRef((props, ref)=>{
         Notiflix.Notify.Success("Publicador agregado a la lista")
        
     }
+    const addGuest=()=>{
+        const nombre= window.prompt("Ingrese nombre del invitado")
+        if (nombre===null || nombre===undefined || nombre.trim()==="" ) return false
+        let newObject=Publicador.insert(nombre, 0, true)
+        props.refreshData()
+        Notiflix.Notify.Success("Invitado agregado")
+        updateListaEspera({
+            label: nombre,
+            value: newObject.id
+        })
+        return true
+    }
 
     React.useImperativeHandle(ref, () => ({
         handleModalOpen(event){
@@ -122,7 +134,7 @@ const ModalLista= React.forwardRef((props, ref)=>{
                         <InputGroup>
                             <Select options={props.allPublicadores} styles={customStyles} name="fldPublicador"  onChange={handleChange} />
                             <InputGroup.Append>
-                                <Button variant="outline-secondary" onClick={props.addPublicador}><FontAwesomeIcon icon="plus-square"/></Button>           
+                                <Button variant="outline-secondary" onClick={addGuest}><FontAwesomeIcon icon="hiking"/></Button>           
                             </InputGroup.Append>
                         </InputGroup>   
                        </Col> 

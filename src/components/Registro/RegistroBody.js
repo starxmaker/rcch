@@ -91,8 +91,8 @@ const  RegistroBody = React.forwardRef((props, ref) => {
                     value:"0",
                     label: "Seleccione"
                 },
-                fldDestinatario: 0,
-                fldMedio:0,
+                fldDestinatario: 1,
+                fldMedio:1,
                 fldTextos:0,
                 fldTipo:"0"
             })
@@ -179,7 +179,8 @@ const  RegistroBody = React.forwardRef((props, ref) => {
     }
     const addPublicador=( fields)=>{
         if (fields.nombre===null || fields.nombre===undefined || fields.nombre.trim()==="" ) return false
-        let newObject=Publicador.insert(fields.nombre, fields.isInvitado)
+        if (fields.grupo===null || fields.grupo===undefined || fields.grupo.trim()==="" ) return false
+        let newObject=Publicador.insert(fields.nombre, fields.grupo, fields.isInvitado)
         props.refreshData()
         Notiflix.Notify.Success("Publicador agregado")
         setFldForm({
@@ -241,6 +242,7 @@ const  RegistroBody = React.forwardRef((props, ref) => {
                                 submitFunction={addPublicador}
                                 fields={[
                                     {name: "nombre", type: "text", label: "Nombre", default: ""}, 
+                                    {name: "grupo", type: "number", label: "Grupo", default: "0"}, 
                                     {name: "isInvitado", type: "checkbox", label: "¿Es invitado?", default:false}]} 
                                 />
 
