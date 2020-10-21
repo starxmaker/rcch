@@ -11,6 +11,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faListAlt } from "@fortawesome/free-solid-svg-icons"
+import {currentDatabase} from "../../Database"
 
 
 
@@ -47,7 +48,7 @@ const ModalLista= React.forwardRef((props, ref)=>{
     const [lista, setLista] = React.useState([])
     const [history, setHistory] = React.useState([])
     
-    const handleModalClose=event =>{
+    const handleModalClose=async (event) =>{
         setShow(false)
     }
     const handleChange= event =>{
@@ -55,11 +56,12 @@ const ModalLista= React.forwardRef((props, ref)=>{
         Notiflix.Notify.Success("Publicador agregado a la lista")
        
     }
-    const addGuest=()=>{
+    const addGuest= async()=>{
         const nombre= window.prompt("Ingrese nombre del invitado")
         if (nombre===null || nombre===undefined || nombre.trim()==="" ) return false
-        let newObject=Publicador.insert(nombre, 0, true)
-        props.refreshData()
+        Notiflix.Loading.Arrows('Agregando invitado');
+        let newObject= await Publicador.insert(nombre, 0, true)
+        await props.refreshData({publicadores: true})
         Notiflix.Notify.Success("Invitado agregado")
         updateListaEspera({
             label: nombre,
@@ -67,12 +69,40 @@ const ModalLista= React.forwardRef((props, ref)=>{
         })
         return true
     }
+    const containsObject = (obj, list) =>{
+        var i;
+        for (i = 0; i < list.length; i++) {
+            if (list[i] === obj) {
+                return true;
+            }
+        }
+    
+        return false;
+    }
 
     React.useImperativeHandle(ref, () => ({
-        handleModalOpen(event){
+        async handleModalOpen(event){
+            Notiflix.Loading.Arrows('Recuperando lista de espera');
+            await refreshServerLista()
             setShow(true)
+            Notiflix.Loading.Remove()
+
         }
     }))
+
+    const updateServerLista = async (newLista) =>{
+        if(currentDatabase.isOnline()){
+            await currentDatabase.postInformation("/listas", {lista: newLista})
+        }
+        return true
+    }
+    const refreshServerLista= async () =>{
+        if(currentDatabase.isOnline()){
+            let lista= await currentDatabase.getInformation("/listas")
+            setLista(lista.lista)
+        }
+        return true
+    }
 
  
 
@@ -81,7 +111,7 @@ const ModalLista= React.forwardRef((props, ref)=>{
         for (let i=0; i<lista.length; i++){
             newState.push(lista[i])
          }
-            if(newState.indexOf(publisher)!=-1) return false;
+            if(containsObject(publisher, newState)) return false;
              if (checkParticipacion(publisher)){
                  newState.push(publisher)
              }else{
@@ -99,22 +129,25 @@ const ModalLista= React.forwardRef((props, ref)=>{
              }
              
              
-       setLista(newState)       
+       setLista(newState)
+       updateServerLista(newState)       
       }
 
     const checkParticipacion = publisher =>{
         return history.indexOf(publisher)!=-1;
     }
    
-    const deleteElement= publisher =>{
+    const deleteElement=(publisher) =>{
         const newLista=[...lista]
         newLista.splice(newLista.indexOf(publisher),1)
-        setLista(newLista)     
+        setLista(newLista)   
+        updateServerLista(newLista)  
+        return newLista
         
     }
 
-    const modifyCurrentName =(publisher) =>{
-        deleteElement(publisher);
+    const modifyCurrentName = (publisher) =>{
+        const newLista=deleteElement(publisher);
         setHistory([...history, publisher])
         props.replacePublicador(publisher)
         handleModalClose()

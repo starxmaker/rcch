@@ -9,7 +9,14 @@ class Record{
         this.textos=textos
         this.tipo=tipo
     }
-    static insert(publicador,medio,publico,textos,tipo){
+    static async insert(publicador,medio,publico,textos,tipo){
+        if (currentDatabase.isOnline()){
+
+            const results=await currentDatabase.postInformation("/records",{publicador: publicador, medio: medio, publico:publico, textos:textos, tipo:tipo})
+            
+            return new Record(results.idRecord, results.publicador, results.medio, results.publico, results.textos, results.tipo)
+            
+        }else{
         
             var date = new Date(); 
             var year=date.getFullYear()
@@ -27,21 +34,46 @@ class Record{
             currentDatabase.executeCommand("insert into records (hora, publicador, medio, publico, textos, tipo) values ('"+hora+"',"+publicador+","+medio+","+publico+","+textos+","+tipo+")")
             let id=currentDatabase.getLastInsertedId("records")
            return new Record(id, hora, publicador, medio, publico, textos,tipo)
+        }
       
     }
-    delete(){
+    async delete(){
+        if (currentDatabase.isOnline()){
+            const result=await currentDatabase.deleteInformation("/records/"+this.id)
+            return true
+        }else {
         currentDatabase.executeCommand("delete from records where id="+this.id)
         return true
+        }
     }
-    static getById(id){
+    static async getById(id){
+        if (currentDatabase.isOnline()){
+            const results=await currentDatabase.getInformation("/records/"+id)
+            return new Record(results.idRecord, results.publicador, results.medio, results.publico, results.textos, results.tipo)
+            
+        }else {
         let results=currentDatabase.exec("select * from records where id="+id)
         if (results.length==0) return false
         return new Record(results[0].id, results[0].hora, results[0].publicador, results[0].medio, results[0].publico, results[0].textos, results[0].tipo)
+        }
     }
-    static getAllRecords(){
-        return currentDatabase.exec("select r.id, r.hora, r.textos, r.tipo, p.nombre as publicador, d.nombre as publico, m.nombre as medio from records r left join publicadores p on (r.publicador=p.id) left join publico d on (r.publico=d.id) left join medio m on (r.medio=m.id) order by 1 desc")
+    static async getAllRecords(){
+        if (currentDatabase.isOnline()){
+            const results=await currentDatabase.getInformation("/records/getLast")
+            var lastResults=[]
+            results.forEach(item =>{
+                lastResults.push({...item, hora: item.hora_year+"-"+item.hora_month+"-"+item.hora_day+" "+ item.hora_hour+":"+ item.hora_minute+":"+ item.hora_second})
+            })
+            return lastResults
+        }else{
+            return currentDatabase.exec("select r.id, r.hora, r.textos, r.tipo, p.nombre as publicador, d.nombre as publico, m.nombre as medio from records r left join publicadores p on (r.publicador=p.id) left join publico d on (r.publico=d.id) left join medio m on (r.medio=m.id) order by 1 desc")
+        }
     }
-    static getDailyStats(){
+    static async getDailyStats(){
+        if (currentDatabase.isOnline()){
+            const results=await currentDatabase.getInformation("/estadisticas/today")
+            return results
+        }else{
         var date = new Date(); 
             var year=date.getFullYear()
             var month=date.getMonth()+1;
@@ -78,6 +110,7 @@ class Record{
             medios: medios
         
             }
+        }
         }
 }
 export default Record

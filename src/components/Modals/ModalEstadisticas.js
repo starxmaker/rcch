@@ -49,14 +49,17 @@ const ModalEstadisticas= React.forwardRef((props, ref)=>{
     }
 
     React.useImperativeHandle(ref, () => ({
-        handleModalOpen(event){
+        async handleModalOpen(event){
+            
+            Notiflix.Loading.Arrows('Cargando estadisticas');
+            await loadData()
             setShow(true)
-            loadData()
+            Notiflix.Loading.Remove()
         }
     }))
 
-    const loadData=()=>{
-        const stats= Record.getDailyStats()
+    const loadData=async ()=>{
+        const stats= await Record.getDailyStats()
         setEstadisticas(stats)
         
     }

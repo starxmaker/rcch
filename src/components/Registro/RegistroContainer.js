@@ -16,7 +16,7 @@ const RegistroContainer = (props)=> {
     
         return(
             <RegistroComponent>
-                <RegistroHeader allLetters={props.allLetters} refreshData={props.refreshData} resetForm={resetForm} showLista={showLista}/>
+                <RegistroHeader allLetters={props.allLetters} refreshData={props.refreshData} resetForm={resetForm} showLista={showLista} online={props.online}/>
                 <RegistroBody allPublicadores={props.allPublicadores} allPublicos={props.allPublicos} allMedios={props.allMedios} refreshData={props.refreshData} ref={bodyRef}/>
             </RegistroComponent>
                       

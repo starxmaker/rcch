@@ -17,16 +17,21 @@ const ModalHistorial = React.forwardRef((props, ref) => {
         setShow(false)
     }
     React.useImperativeHandle(ref, () => ({
-        handleModalOpen(event){
+        async handleModalOpen(event){
+            Notiflix.Loading.Arrows('Cargando datos');
+            props.refreshData({records: true})
             setShow(true)
+            Notiflix.Loading.Remove()
         }
     }))
 
-    const deleteRecord=id =>{
-        let targetRecord=Record.getById(id)
-        if (targetRecord!=false) targetRecord.delete()
+    const deleteRecord=async (id) =>{
+        Notiflix.Loading.Arrows('Eliminando registro');
+        let targetRecord=await Record.getById(id)
+        if (targetRecord!=false) await targetRecord.delete()
         Notiflix.Notify.Success("Carta eliminada")
-        props.refreshData()
+        Notiflix.Loading.Remove()
+        props.refreshData({records: true})
     }
 
    

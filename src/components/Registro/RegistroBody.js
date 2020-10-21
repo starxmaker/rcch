@@ -65,7 +65,8 @@ const  RegistroBody = React.forwardRef((props, ref) => {
     const modalRefMedios=React.useRef(null)
     const modalRefPublicos=React.useRef(null)
     const modalRefLista=React.useRef(null)
-    
+
+ 
 
     const handleModalOpen= tipo =>{
         if (tipo=="publicadores"){
@@ -74,7 +75,7 @@ const  RegistroBody = React.forwardRef((props, ref) => {
             if (tipo=="publicos"){
                 modalRefPublicos.current.handleModalOpen()
             }else{
-                if(tipo="lista"){
+                if(tipo=="lista"){
                     modalRefLista.current.handleModalOpen()
                 }else{
                     modalRefMedios.current.handleModalOpen()
@@ -122,12 +123,14 @@ const  RegistroBody = React.forwardRef((props, ref) => {
         }
        
     }
-    const handleSubmit= event =>{
+    const handleSubmit= async (event) =>{
         event.preventDefault()
         if (fldForm.fldPublicador.value==0) return false
+        Notiflix.Loading.Arrows('Agregando registro');
         
-        let currentRecord=Record.insert(fldForm.fldPublicador.value,fldForm.fldMedio, fldForm.fldDestinatario, fldForm.fldTextos, fldForm.fldTipo)
-        props.refreshData()
+        
+        let currentRecord=await Record.insert(fldForm.fldPublicador.value,fldForm.fldMedio, fldForm.fldDestinatario, fldForm.fldTextos, fldForm.fldTipo)
+        Notiflix.Loading.Remove()
         resetForm()
         Notiflix.Notify.Success("Registro agregado")
     }
@@ -148,23 +151,29 @@ const  RegistroBody = React.forwardRef((props, ref) => {
             }
         })
     }
-    const deletePublicador=(id) =>{
-        let targetPublicador=Publicador.getById(id)
-        if (targetPublicador!=false) targetPublicador.delete()
+    const deletePublicador=async (id) =>{
+        Notiflix.Loading.Arrows('Eliminando publicador');
+        let targetPublicador= await Publicador.getById(id)
+        if (targetPublicador!=false) await targetPublicador.delete()
         Notiflix.Notify.Success("Publicador eliminado")
-        props.refreshData()
+        Notiflix.Loading.Remove()
+        props.refreshData({publicadores: true})
     }
-    const deleteMedio=(id)=>{
-        let targetMedio=Medio.getById(id)
-        if (targetMedio!=false) targetMedio.delete()
+    const deleteMedio= async(id)=>{
+        Notiflix.Loading.Arrows('Eliminando medio');
+        let targetMedio=await Medio.getById(id)
+        if (targetMedio!=false) await targetMedio.delete()
         Notiflix.Notify.Success("Medio eliminado")
-        props.refreshData()
+        Notiflix.Loading.Remove()
+        props.refreshData({medios: true})
     }
-    const deletePublico=(id)=>{
-        let targetPublico=Publico.getById(id)
-        if (targetPublico!=false) targetPublico.delete()
+    const deletePublico= async(id)=>{
+        Notiflix.Loading.Arrows('Eliminando público');
+        let targetPublico=await Publico.getById(id)
+        if (targetPublico!=false) await targetPublico.delete()
         Notiflix.Notify.Success("Publico eliminado")
-        props.refreshData()
+        Notiflix.Loading.Remove()
+        props.refreshData({publicos: true})
     }
     const openModalIngresar=(tipo)=>{
         if (tipo==="publicador"){
@@ -177,11 +186,13 @@ const  RegistroBody = React.forwardRef((props, ref) => {
             }
         }
     }
-    const addPublicador=( fields)=>{
+    const addPublicador= async( fields)=>{
         if (fields.nombre===null || fields.nombre===undefined || fields.nombre.trim()==="" ) return false
         if (fields.grupo===null || fields.grupo===undefined || fields.grupo.trim()==="" ) return false
-        let newObject=Publicador.insert(fields.nombre, fields.grupo, fields.isInvitado)
-        props.refreshData()
+        Notiflix.Loading.Arrows('Agregando publicador');
+        let newObject= await Publicador.insert(fields.nombre, fields.grupo, fields.isInvitado)
+        Notiflix.Loading.Remove()
+        await props.refreshData({publicadores: true})
         Notiflix.Notify.Success("Publicador agregado")
         setFldForm({
             ...fldForm,
@@ -192,13 +203,14 @@ const  RegistroBody = React.forwardRef((props, ref) => {
         })
         return true
     }
-    const addMedio=(fields)=>{
+    const addMedio= async(fields)=>{
         if (fields.nombre===null || fields.nombre===undefined || fields.nombre.trim()==="" ) return false
         if (fields.color===null || fields.color===undefined || fields.color.trim()==="" ) return false
+        Notiflix.Loading.Arrows('Agregando medio');
        
-        let newObject=Medio.insert(fields.nombre, fields.color)
-        console.log(newObject)
-        props.refreshData()
+        let newObject=await Medio.insert(fields.nombre, fields.color)
+        Notiflix.Loading.Remove()
+        await props.refreshData({medios:true})
         Notiflix.Notify.Success("Medio agregado")
         setFldForm({
             ...fldForm,
@@ -206,12 +218,15 @@ const  RegistroBody = React.forwardRef((props, ref) => {
         })
         return true
     }
-    const addPublico=(fields)=>{
+    const addPublico= async(fields)=>{
         if (fields.nombre===null || fields.nombre===undefined || fields.nombre.trim()==="" ) return false
         if (fields.color===null || fields.color===undefined || fields.color.trim()==="" ) return false
-        let newObject=Publico.insert(fields.nombre, fields.color)
-        props.refreshData()
+        Notiflix.Loading.Arrows('Agregando público');
+        let newObject=await Publico.insert(fields.nombre, fields.color)
+        Notiflix.Loading.Remove()
         Notiflix.Notify.Success("Publico agregado")
+        await props.refreshData({publicos: true})
+        
         setFldForm({
             ...fldForm,
             fldDestinatario: newObject.id

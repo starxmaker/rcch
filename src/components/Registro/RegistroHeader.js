@@ -5,6 +5,7 @@ import ModalImportDB from "../Modals/ModalImportDB"
 import ModalHistorial from "../Modals/ModalHistorial"
 import ModalEstadisticas from "../Modals/ModalEstadisticas"
 import {currentDatabase} from "../../Database"
+import Notiflix from "notiflix-react"
 
 
 const RegistroHeader = (props)=>{
@@ -37,11 +38,16 @@ const RegistroHeader = (props)=>{
                                 <Dropdown style={{float: "left"}}>
                                     <Dropdown.Toggle as={CustomToggle} id="dropdown-basic" />
                                     <Dropdown.Menu>
-                                        <Dropdown.Item onClick={createNewDatabase}> <FontAwesomeIcon icon="file" /> Nueva base de datos</Dropdown.Item>
-                                        <Dropdown.Item onClick={handleModalOpen}><FontAwesomeIcon icon="folder" /> Abrir base de datos</Dropdown.Item>
+                                        <Dropdown.Item onClick={createNewDatabase} style={props.online ? {display: "none"} : {}}> <FontAwesomeIcon icon="file" /> Nueva base de datos</Dropdown.Item>
+                                        <Dropdown.Item onClick={handleModalOpen}  style={props.online ? {display: "none"} : {}}><FontAwesomeIcon icon="folder" /> Abrir base de datos</Dropdown.Item>
                                         <Dropdown.Item onClick={() =>{
                                             currentDatabase.exportExistingDatabase()
-                                        }}><FontAwesomeIcon icon="download" /> Descargar base de datos</Dropdown.Item>
+                                        }}  style={props.online ? {display: "none"} : {}}><FontAwesomeIcon icon="download" /> Descargar base de datos</Dropdown.Item>
+                                        <Dropdown.Item style={props.online ? {} : {display: "none"}} onClick={() =>{
+                                            Notiflix.Loading.Arrows('Cerrando sesión');
+                                            window.localStorage.removeItem("sessionToken")
+                                            window.location.reload()
+                                        }}><FontAwesomeIcon icon="sign-out-alt" /> Cerrar sesión</Dropdown.Item>
                                         <Dropdown.Item onClick={props.showLista}><FontAwesomeIcon icon="ellipsis-h" /> Lista de espera</Dropdown.Item>
                                         <Dropdown.Item onClick={handleModalHistoryOpen}><FontAwesomeIcon icon="history" /> Ver historial</Dropdown.Item>
                                         <Dropdown.Item onClick={handleModalEstadisticasOpen}><FontAwesomeIcon icon="chart-pie" /> Estadísticas</Dropdown.Item>

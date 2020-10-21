@@ -1,4 +1,6 @@
 import initSqlJs from "sql.js";
+import axios from "axios"
+import Notiflix from "notiflix-react"
 
 let currentDatabase
 
@@ -6,7 +8,11 @@ class Database{
     constructor(callback){
         
         initSqlJs().then(SQL => {
+        this.online=false
+        this.url=""
+        this.token=""
         this.SQL=SQL
+        this.response=false
         let database=window.localStorage.getItem("rcchDB")
         
         if(database==null){
@@ -18,6 +24,73 @@ class Database{
         currentDatabase=this
         if (callback!=null) callback()
     })
+    }
+    async initOnlineServer(server, token){
+        if(!this.response){
+        this.online=true
+        this.url=server
+        this.token=token
+        window.localStorage.setItem("sessionToken", token)
+        window.localStorage.setItem("server",server)
+        const response= await this.testOnlineConnection()
+        this.response=response
+        if (!response){
+            this.online=false
+        }
+        }
+
+        return this.response
+    }
+    async testOnlineConnection(){
+        try{
+        const response=await axios.get(this.url+"/misc/test", {
+            headers: {
+              'access-token': this.token
+            }
+          })
+         return response.status==200
+        }catch(err){
+            return false
+        }
+    }
+    async getInformation(route){
+        try{
+            const response=await axios.get(this.url+route, {
+                headers: {
+                  'access-token': this.token
+                }
+              })
+             return response.data
+            }catch(err){
+                Notiflix.Report.Failure('Información','Sin conexión con el servidor. Vuelva a iniciar sesión','OK');
+                return false
+            }
+    }
+    async postInformation(route, data){
+        try{
+            const response=await axios.post(this.url+route,data, {
+                headers: {
+                  'access-token': this.token
+                }
+              })
+             return response.data
+            }catch(err){
+                Notiflix.Report.Failure('Información','Sin conexión con el servidor. Vuelva a iniciar sesión','OK');
+                return false
+            }
+    }
+    async deleteInformation(route){
+        try{
+            const response=await axios.delete(this.url+route, {
+                headers: {
+                  'access-token': this.token
+                }
+              })
+             return response.data
+            }catch(err){
+                Notiflix.Report.Failure('Información','Sin conexión con el servidor. Vuelva a iniciar sesión','OK');
+                return false
+            }
     }
     createDatabase(){
         this.db=new this.SQL.Database()
@@ -41,6 +114,9 @@ class Database{
     }
     getBDID(){
         return this.db.db
+    }
+    isOnline(){
+        return this.online
     }
     
     executeCommand(command){

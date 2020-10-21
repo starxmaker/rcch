@@ -3,7 +3,7 @@ const timeSince=date => {
     if (typeof date !== 'object') {
         date = new Date(date);
       }
-    
+
       var seconds = Math.floor((new Date() - date) / 1000);
       var intervalType;
     

@@ -4,6 +4,7 @@ import Notiflix from "notiflix-react"
 import Header from "./components/Header"
 import {Database} from "./Database"
 import RegistroContainer from "./components/Registro/RegistroContainer"
+import ModalLogin from "./components/Modals/ModalLogin"
 import Publicador from "./models/Publicador"
 import Publico from "./models/Publico"
 import Medio from "./models/Medio"
@@ -14,8 +15,8 @@ import {currentDatabase} from './Database'
 
 
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faAddressBook, faCog, faPlusSquare, faPencilAlt, faTrashAlt, faCommentDots, faEnvelope, faHandPaper, faBook, faUserEdit, faUndoAlt, faFile, faFolder, faDownload, faEllipsisH, faHistory, faChartPie, faMoon, faHiking} from "@fortawesome/free-solid-svg-icons";
-library.add(faAddressBook, faCog,faPlusSquare, faPencilAlt, faTrashAlt, faCommentDots, faEnvelope, faHandPaper, faBook, faUserEdit, faUndoAlt, faFile, faFolder, faDownload, faEllipsisH, faHistory, faChartPie, faMoon, faHiking);
+import { faAddressBook, faCog, faPlusSquare, faPencilAlt, faTrashAlt, faCommentDots, faEnvelope, faHandPaper, faBook, faUserEdit, faUndoAlt, faFile, faFolder, faDownload, faEllipsisH, faHistory, faChartPie, faMoon, faHiking, faSignOutAlt} from "@fortawesome/free-solid-svg-icons";
+library.add(faAddressBook, faCog,faPlusSquare, faPencilAlt, faTrashAlt, faCommentDots, faEnvelope, faHandPaper, faBook, faUserEdit, faUndoAlt, faFile, faFolder, faDownload, faEllipsisH, faHistory, faChartPie, faMoon, faHiking, faSignOutAlt);
 
 Notiflix.Report.Init({
   backgroundColor: '#222',
@@ -34,23 +35,67 @@ const App=() =>{
     const [allPublicos,setAllPublicos]= React.useState([])
     const [allMedios, setAllMedios]= React.useState([])
     const [allLetters, setAllLetters] = React.useState([])
+    const [showLogin, setShowLogin] =React.useState(false)
+    const [online, setOnline] = React.useState(false)
 
-    const refreshData =()=>{
+    const refreshData = async (filtros)=>{
+      if (filtros==undefined) filtros={publicadores: true, publicos:true, medios:true, records:true}
       if(currentDatabase!=null){
-       let receivedPublicadores=Publicador.getAllPublicadores()
-       setAllPublicadores(receivedPublicadores)
-       let receivedPublicos=Publico.getAllPublicos()
-       setAllPublicos(receivedPublicos)
-       let receivedMedios=Medio.getAllMedios()
+        
+        if(window.localStorage.getItem("sessionToken")!=undefined  && window.localStorage.getItem("sessionToken")!=""){
+          let response = await currentDatabase.initOnlineServer(window.localStorage.getItem("server"), window.localStorage.getItem("sessionToken"))
+          
+          if (response){
+            setOnline(true)
+              handleShowLogin(false)
+            }else{
+              handleShowLogin(true)
+            }
+          }else{
+            handleShowLogin(true)
+          }
+       if (filtros.publicadores){
+          let receivedPublicadores=await Publicador.getAllPublicadores()
+          setAllPublicadores(receivedPublicadores)
+       }
+       if (filtros.publicos){
+          let receivedPublicos=await Publico.getAllPublicos()
+          setAllPublicos(receivedPublicos)
+       }
+       if (filtros.medios){
+              
+       let receivedMedios= await Medio.getAllMedios()
        setAllMedios(receivedMedios)
-       let receivedLetters=Record.getAllRecords()
+       }
+       if (filtros.records){
+       let receivedLetters=await Record.getAllRecords()
        setAllLetters(receivedLetters)
+       }
+       Notiflix.Loading.Remove()
       }
 
    }
-  React.useEffect(() => {
-    new Database(refreshData)
-  }, [])
+   
+   const handleServerLogin = async (server, token) =>{
+    const result= await currentDatabase.initOnlineServer(server,token)
+    if (result){
+      refreshData({publicadores: true, publicos:true, medios:true, records:true})
+      setOnline(true)
+    }
+}
+const handleShowLogin = show=>{
+  setShowLogin(show)
+}
+
+
+
+
+React.useEffect(() => {
+  Notiflix.Loading.Arrows('Cargando ambiente');
+  new Database(refreshData)
+  
+}, [])
+
 
   
 
@@ -58,9 +103,9 @@ const App=() =>{
     return (
       
         <div className="App">
-          
+          <ModalLogin show={showLogin} handleServerLogin={handleServerLogin} />
             <Header  />
-            <RegistroContainer allLetters={allLetters} allPublicadores={allPublicadores} allPublicos={allPublicos} allMedios={allMedios} refreshData={refreshData} />
+            <RegistroContainer allLetters={allLetters} allPublicadores={allPublicadores} allPublicos={allPublicos} allMedios={allMedios} refreshData={refreshData} online={online} />
         </div>
       
     )
