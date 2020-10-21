@@ -3,6 +3,7 @@ import Record from "../../models/Record"
 import Modal from 'react-bootstrap/Modal'
 import Notiflix from "notiflix-react"
 import Carousel from 'react-bootstrap/Carousel'
+import ChartLabel from "../Otros/ChartLabel"
 
 import { PieChart } from 'react-minimal-pie-chart'
 
@@ -77,7 +78,7 @@ const ModalEstadisticas= React.forwardRef((props, ref)=>{
         <EstadisticasItem label="Publicadores" value={estadisticas.publicadores} icon="hand-paper" color={{color:"green"}}  width="50%" />
         <EstadisticasItem label="Textos" value={estadisticas.textos} icon="book" color={{color:"grey"}}   width="50%"/>
         <EstadisticasItem label="Revisitas" value={estadisticas.revisitas} icon="undo-alt" color={{color:"orange"}}  width="50%" />
-        <EstadisticasItem label="Cartas por publicador" value={estadisticas.porPublicador} icon="user-edit" color={{color:"blue"}}  width="100%" />
+        <EstadisticasItem label="Cartas por publicador" value={Math.round(estadisticas.porPublicador,1)} icon="user-edit" color={{color:"blue"}}  width="100%" />
 
     
   </Carousel.Item>
@@ -85,7 +86,25 @@ const ModalEstadisticas= React.forwardRef((props, ref)=>{
   <h1 className="display-5" style={{textAlign: "center"}}>¿A quién enviaremos?</h1>
   <PieChart style={{height:300}}
   data={estadisticas.publicos}
-  label={({ dataEntry }) => `${dataEntry.title+": "+Math.round(dataEntry.percentage)} %`}
+  label={({ dataEntry }) => `${Math.round(dataEntry.percentage)}%`}
+  labelStyle={{
+    fontSize: '5px',
+    fontFamily: 'sans-serif',
+    fill: "white"
+  }
+  }
+/>
+<div style={{textAlign: "center", paddingTop: 10}}>
+{estadisticas.publicos.map (item =>{ return (<ChartLabel color={item.color} label ={item.title} />) })}
+</div>
+
+
+  </Carousel.Item>
+  <Carousel.Item>
+  <h1 className="display-5" style={{textAlign: "center"}}>¿Cómo se enviarán?</h1>
+  <PieChart style={{height:300}}
+  data={estadisticas.medios}
+  label={({ dataEntry }) => `${Math.round(dataEntry.percentage)}%`}
   labelStyle={{
     fontSize: '5px',
     fontFamily: 'sans-serif',
@@ -94,19 +113,9 @@ const ModalEstadisticas= React.forwardRef((props, ref)=>{
   }
 />
 
-  </Carousel.Item>
-  <Carousel.Item>
-  <h1 className="display-5" style={{textAlign: "center"}}>¿Cómo se enviarán?</h1>
-  <PieChart style={{height:300}}
-  data={estadisticas.medios}
-  label={({ dataEntry }) => `${dataEntry.title+": "+Math.round(dataEntry.percentage)} %`}
-  labelStyle={{
-    fontSize: '5px',
-    fontFamily: 'sans-serif',
-    fill: "white"
-  }
-  }
-/>
+<div style={{textAlign: "center", paddingTop: 10}}>
+{estadisticas.medios.map (item =>{ return (<ChartLabel color={item.color} label ={item.title} />) })}
+</div>
   </Carousel.Item>
 </Carousel>
 
