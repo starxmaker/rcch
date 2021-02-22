@@ -58,6 +58,8 @@ const  RegistroBody = React.forwardRef((props, ref) => {
         fldDestinatario: 1,
         fldMedio:1,
         fldTextos:0,
+        fldPublicacion: false,
+        fldVideo: false,
         fldTipo:"0"
     });
 
@@ -95,7 +97,9 @@ const  RegistroBody = React.forwardRef((props, ref) => {
                 fldDestinatario: 1,
                 fldMedio:1,
                 fldTextos:0,
-                fldTipo:"0"
+                fldTipo:"0",
+                fldPublicacion: false,
+                fldVideo: false,
             })
         }
     React.useImperativeHandle(ref, () => ({
@@ -116,8 +120,14 @@ const  RegistroBody = React.forwardRef((props, ref) => {
     const handleChange= event =>{
         
         if("target" in event){
-            let {name, value} = event.target
-            setFldForm({...fldForm,[name]: value})
+            if(event.target.type === "checkbox"){
+                let {name, checked} = event.target
+                setFldForm({...fldForm,[name]: checked})
+            }else{
+                let {name, value} = event.target
+                setFldForm({...fldForm,[name]: value})
+            }
+            
         }else{
             setFldForm({...fldForm,fldPublicador: event})
         }
@@ -129,7 +139,7 @@ const  RegistroBody = React.forwardRef((props, ref) => {
         Notiflix.Loading.Arrows('Agregando registro');
         
         
-        let currentRecord=await Record.insert(fldForm.fldPublicador.value,fldForm.fldMedio, fldForm.fldDestinatario, fldForm.fldTextos, fldForm.fldTipo)
+        let currentRecord=await Record.insert(fldForm.fldPublicador.value,fldForm.fldMedio, fldForm.fldDestinatario, fldForm.fldTextos, fldForm.fldVideo, fldForm.fldPublicacion, fldForm.fldTipo)
         Notiflix.Loading.Remove()
         resetForm()
         Notiflix.Notify.Success("Registro agregado")
@@ -338,6 +348,29 @@ const  RegistroBody = React.forwardRef((props, ref) => {
                                 <Button variant="outline-secondary" onClick={increment}>+</Button>
                             </InputGroup.Append>
                         </InputGroup>
+                        </Col>
+                    </Form.Group>
+                    <Form.Group as={Row}>
+                        <Form.Label column sm="4">
+                            Adjunto
+                        </Form.Label>
+                        <Col sm="8">
+                            <Form.Check 
+                                type="switch"
+                                id="switchVideo"
+                                label="Vídeo"
+                                name="fldVideo"
+                                checked={fldForm.fldVideo}
+                                onChange={handleChange}
+                            />
+                            <Form.Check 
+                                type="switch"
+                                label="Publicación"
+                                id="switchPublicacion"
+                                name="fldPublicacion"
+                                checked={fldForm.fldPublicacion}
+                                onChange={handleChange}
+                            />
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row}>

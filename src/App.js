@@ -15,8 +15,8 @@ import {currentDatabase} from './Database'
 
 
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faAddressBook, faCog, faPlusSquare, faPencilAlt, faTrashAlt, faCommentDots, faEnvelope, faHandPaper, faBook, faUserEdit, faUndoAlt, faFile, faFolder, faDownload, faEllipsisH, faHistory, faChartPie, faMoon, faHiking, faSignOutAlt} from "@fortawesome/free-solid-svg-icons";
-library.add(faAddressBook, faCog,faPlusSquare, faPencilAlt, faTrashAlt, faCommentDots, faEnvelope, faHandPaper, faBook, faUserEdit, faUndoAlt, faFile, faFolder, faDownload, faEllipsisH, faHistory, faChartPie, faMoon, faHiking, faSignOutAlt);
+import { faAddressBook, faCog, faPlusSquare, faPencilAlt, faTrashAlt, faCommentDots, faEnvelope, faHandPaper, faBook, faUserEdit, faUndoAlt, faFile, faFolder, faDownload, faEllipsisH, faHistory, faChartPie, faMoon, faHiking, faSignOutAlt, faFilm, faFileAlt} from "@fortawesome/free-solid-svg-icons";
+library.add(faAddressBook, faCog,faPlusSquare, faPencilAlt, faTrashAlt, faCommentDots, faEnvelope, faHandPaper, faBook, faUserEdit, faUndoAlt, faFile, faFolder, faDownload, faEllipsisH, faHistory, faChartPie, faMoon, faHiking, faSignOutAlt, faFilm, faFileAlt);
 
 Notiflix.Report.Init({
   backgroundColor: '#222',

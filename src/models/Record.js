@@ -1,18 +1,20 @@
 import {currentDatabase} from "../Database"
 class Record{
-    constructor(id,hora,publicador,medio,publico,textos,tipo){
+    constructor(id,hora,publicador,medio,publico,textos,video, publicacion,tipo){
         this.id=id
         this.hora=hora
         this.publicador=publicador
         this.medio=medio
         this.publico=publico
         this.textos=textos
+        this.video=video
+        this.publicacion=publicacion
         this.tipo=tipo
     }
-    static async insert(publicador,medio,publico,textos,tipo){
+    static async insert(publicador,medio,publico,textos,video, publicacion, tipo){
         if (currentDatabase.isOnline()){
 
-            const results=await currentDatabase.postInformation("/records",{publicador: publicador, medio: medio, publico:publico, textos:textos, tipo:tipo})
+            const results=await currentDatabase.postInformation("/records",{publicador: publicador, medio: medio, publico:publico, textos:textos, tipo:tipo, publicacionAdjunta: publicacion, videoAdjunto: video})
             
             return new Record(results.idRecord, results.publicador, results.medio, results.publico, results.textos, results.tipo)
             

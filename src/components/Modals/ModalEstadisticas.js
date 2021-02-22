@@ -31,7 +31,12 @@ const ModalEstadisticas= React.forwardRef((props, ref)=>{
             publicadores:0,
             textos:0,
             revisitas:0,
-            porPublicador:0,
+            videos: 0,
+            publicaciones: 0,
+            revisitaDiff:[
+                { title: 'One', value: 10, color: '#6f42c1' },
+                { title: 'Two', value: 15, color: '#fd7e14' },
+            ],
             publicos:[
                 { title: 'One', value: 10, color: '#E38627' },
                 { title: 'Two', value: 15, color: '#C13C37' },
@@ -78,9 +83,28 @@ const ModalEstadisticas= React.forwardRef((props, ref)=>{
         <EstadisticasItem label="Publicadores" value={estadisticas.publicadores} icon="hand-paper" color={{color:"green"}}  width="50%" />
         <EstadisticasItem label="Textos" value={estadisticas.textos} icon="book" color={{color:"grey"}}   width="50%"/>
         <EstadisticasItem label="Revisitas" value={estadisticas.revisitas} icon="undo-alt" color={{color:"orange"}}  width="50%" />
-        <EstadisticasItem label="Cartas por publicador" value={Math.round(estadisticas.porPublicador,1)} icon="user-edit" color={{color:"blue"}}  width="100%" />
-
+        <EstadisticasItem label="Videos" value={estadisticas.videos} icon="film" color={{color:"cyan"}}  width="50%" />
+        <EstadisticasItem label="Publicaciones" value={estadisticas.publicaciones} icon="file-alt" color={{color:"indigo"}}  width="50%" />
+        
     
+  </Carousel.Item>
+  <Carousel.Item>
+  <h1 className="display-5" style={{textAlign: "center"}}>¿Hemos hablado antes?</h1>
+  <PieChart style={{height:300}}
+  data={estadisticas.revisitaDiff}
+  label={({ dataEntry }) => `${Math.round(dataEntry.percentage)}%`}
+  labelStyle={{
+    fontSize: '5px',
+    fontFamily: 'sans-serif',
+    fill: "white"
+  }
+  }
+/>
+<div style={{textAlign: "center", paddingTop: 10}}>
+{estadisticas.revisitaDiff.map (item =>{ return (<ChartLabel color={item.color} label ={item.title} />) })}
+</div>
+
+
   </Carousel.Item>
   <Carousel.Item>
   <h1 className="display-5" style={{textAlign: "center"}}>¿A quién enviaremos?</h1>
