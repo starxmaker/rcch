@@ -60,7 +60,8 @@ const  RegistroBody = React.forwardRef((props, ref) => {
         fldTextos:0,
         fldPublicacion: false,
         fldVideo: false,
-        fldTipo:"0"
+        fldTipo:"0",
+        fldCopias: 1
     });
 
     const modalRefPublicadores=React.useRef(null)
@@ -100,6 +101,7 @@ const  RegistroBody = React.forwardRef((props, ref) => {
                 fldTipo:"0",
                 fldPublicacion: false,
                 fldVideo: false,
+                fldCopias: 1
             })
         }
     React.useImperativeHandle(ref, () => ({
@@ -139,7 +141,7 @@ const  RegistroBody = React.forwardRef((props, ref) => {
         Notiflix.Loading.Arrows('Agregando registro');
         
         
-        let currentRecord=await Record.insert(fldForm.fldPublicador.value,fldForm.fldMedio, fldForm.fldDestinatario, fldForm.fldTextos, fldForm.fldVideo, fldForm.fldPublicacion, fldForm.fldTipo)
+        let currentRecord=await Record.insert(fldForm.fldPublicador.value,fldForm.fldMedio, fldForm.fldDestinatario, fldForm.fldTextos, fldForm.fldVideo, fldForm.fldPublicacion, fldForm.fldTipo, fldForm.fldCopias)
         Notiflix.Loading.Remove()
         resetForm()
         Notiflix.Notify.Success("Registro agregado")
@@ -158,6 +160,24 @@ const  RegistroBody = React.forwardRef((props, ref) => {
             return {
                 ...fldForm,
                 fldTextos: prevState.fldTextos - 1
+            }
+        })
+    }
+    const incrementCopies=()=>{
+        setFldForm(prevState=>{
+            return {
+                ...fldForm,
+                fldCopias: prevState.fldCopias + 1
+            }
+        })
+        
+    }
+    const decrementCopies=()=>{
+        if (fldForm.fldCopias === 1) return false
+        setFldForm(prevState=>{
+            return {
+                ...fldForm,
+                fldCopias: prevState.fldCopias - 1
             }
         })
     }
@@ -395,6 +415,23 @@ const  RegistroBody = React.forwardRef((props, ref) => {
                                     checked={fldForm.fldTipo==="1"}
                                     onChange={handleChange}
                                 />
+                        </Col>
+                    </Form.Group>
+                    <Form.Group as={Row}>
+                        <Form.Label column sm="4">
+                            Copias
+                        </Form.Label>
+                        <Col sm="8">
+                        <InputGroup>
+                            <InputGroup.Prepend>
+                                <Button variant="outline-secondary" onClick={decrementCopies}>-</Button>
+                            </InputGroup.Prepend>
+                            <FormControl name="fldCopias" value={fldForm.fldCopias} onChange={handleChange}/>
+                                
+                            <InputGroup.Append>
+                                <Button variant="outline-secondary" onClick={incrementCopies}>+</Button>
+                            </InputGroup.Append>
+                        </InputGroup>
                         </Col>
                     </Form.Group>
                 </div>
