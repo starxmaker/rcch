@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import Notiflix from "notiflix-react"
+import Notiflix from "notiflix"
 import Header from "./components/Header"
 import {Database} from "./Database"
 import RegistroContainer from "./components/Registro/RegistroContainer"
@@ -18,7 +18,7 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { faAddressBook, faCog, faPlusSquare, faPencilAlt, faTrashAlt, faCommentDots, faEnvelope, faHandPaper, faBook, faUserEdit, faUndoAlt, faFile, faFolder, faDownload, faEllipsisH, faHistory, faChartPie, faMoon, faHiking, faSignOutAlt, faFilm, faFileAlt} from "@fortawesome/free-solid-svg-icons";
 library.add(faAddressBook, faCog,faPlusSquare, faPencilAlt, faTrashAlt, faCommentDots, faEnvelope, faHandPaper, faBook, faUserEdit, faUndoAlt, faFile, faFolder, faDownload, faEllipsisH, faHistory, faChartPie, faMoon, faHiking, faSignOutAlt, faFilm, faFileAlt);
 
-Notiflix.Report.Init({
+Notiflix.Report.init({
   backgroundColor: '#222',
   success: {
       titleColor: '#bebebe',
@@ -71,7 +71,7 @@ const App=() =>{
        let receivedLetters=await Record.getAllRecords()
        setAllLetters(receivedLetters)
        }
-       Notiflix.Loading.Remove()
+       Notiflix.Loading.remove()
       }
 
    }
@@ -91,7 +91,7 @@ const handleShowLogin = show=>{
 
 
 React.useEffect(() => {
-  Notiflix.Loading.Arrows('Cargando ambiente');
+  Notiflix.Loading.arrows('Cargando ambiente');
   new Database(refreshData)
   
 }, [])

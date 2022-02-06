@@ -1,6 +1,6 @@
 import React, {useEffect} from "react"
 import Modal from 'react-bootstrap/Modal'
-import Notiflix from "notiflix-react"
+import Notiflix from "notiflix"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Record from "../../models/Record"
 import {timeSince} from "../../Utils"
@@ -18,19 +18,19 @@ const ModalHistorial = React.forwardRef((props, ref) => {
     }
     React.useImperativeHandle(ref, () => ({
         async handleModalOpen(event){
-            Notiflix.Loading.Arrows('Cargando datos');
+            Notiflix.Loading.arrows('Cargando datos');
             props.refreshData({records: true})
             setShow(true)
-            Notiflix.Loading.Remove()
+            Notiflix.Loading.remove()
         }
     }))
 
     const deleteRecord=async (id) =>{
-        Notiflix.Loading.Arrows('Eliminando registro');
+        Notiflix.Loading.arrows('Eliminando registro');
         let targetRecord=await Record.getById(id)
         if (targetRecord!=false) await targetRecord.delete()
-        Notiflix.Notify.Success("Carta eliminada")
-        Notiflix.Loading.Remove()
+        Notiflix.Notify.success("Carta eliminada")
+        Notiflix.Loading.remove()
         props.refreshData({records: true})
     }
 

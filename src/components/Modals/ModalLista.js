@@ -1,7 +1,7 @@
 import React, {useState} from "react"
 import Publicador from "../../models/Publicador"
 import Modal from 'react-bootstrap/Modal'
-import Notiflix from "notiflix-react"
+import Notiflix from "notiflix"
 import Select from "react-select"
 import FormControl from 'react-bootstrap/FormControl'
 import Form from 'react-bootstrap/Form'
@@ -53,16 +53,16 @@ const ModalLista= React.forwardRef((props, ref)=>{
     }
     const handleChange= event =>{
         updateListaEspera(event);
-        Notiflix.Notify.Success("Publicador agregado a la lista")
+        Notiflix.Notify.success("Publicador agregado a la lista")
        
     }
     const addGuest= async()=>{
         const nombre= window.prompt("Ingrese nombre del invitado")
         if (nombre===null || nombre===undefined || nombre.trim()==="" ) return false
-        Notiflix.Loading.Arrows('Agregando invitado');
+        Notiflix.Loading.arrows('Agregando invitado');
         let newObject= await Publicador.insert(nombre, 0, true)
         await props.refreshData({publicadores: true})
-        Notiflix.Notify.Success("Invitado agregado")
+        Notiflix.Notify.success("Invitado agregado")
         updateListaEspera({
             label: nombre,
             value: newObject.id
@@ -82,10 +82,10 @@ const ModalLista= React.forwardRef((props, ref)=>{
 
     React.useImperativeHandle(ref, () => ({
         async handleModalOpen(event){
-            Notiflix.Loading.Arrows('Recuperando lista de espera');
+            Notiflix.Loading.arrows('Recuperando lista de espera');
             await refreshServerLista()
             setShow(true)
-            Notiflix.Loading.Remove()
+            Notiflix.Loading.remove()
 
         }
     }))

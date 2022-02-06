@@ -1,6 +1,6 @@
 import React, {useEffect} from "react"
 import Modal from 'react-bootstrap/Modal'
-import Notiflix from "notiflix-react"
+import Notiflix from "notiflix"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import FormControl from 'react-bootstrap/FormControl'
 import Form from 'react-bootstrap/Form'
@@ -25,16 +25,16 @@ const ModalLogin = props => {
         if (fields.server.trim()!="" && fields.userName.trim!="" && fields.password.trim()!=""){
             let servidor=fields.server.trim()
             if(servidor.charAt(servidor.length-1) == "/"){ servidor = servidor.substr(0, servidor.length - 1);}
-            Notiflix.Loading.Arrows('Iniciando sesión');
+            Notiflix.Loading.arrows('Iniciando sesión');
             axios.post(servidor+"/usuarios/login", { username: fields.userName, password: fields.password })
             .then(res => {
-                Notiflix.Report.Success('Información','Inicio de sesión exitoso','OK');
-                Notiflix.Loading.Remove();
+                Notiflix.Report.success('Información','Inicio de sesión exitoso','OK');
+                Notiflix.Loading.remove();
                 handleModalClose()
                 props.handleServerLogin(servidor,res.data.token)
       }).catch(err => {
-        Notiflix.Report.Failure('Información','Credenciales erroneas, reintente','OK');
-        Notiflix.Loading.Remove();
+        Notiflix.Report.failure('Información','Credenciales erroneas, reintente','OK');
+        Notiflix.Loading.remove();
     })
         }
     }

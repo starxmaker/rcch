@@ -5,7 +5,7 @@ import ModalImportDB from "../Modals/ModalImportDB"
 import ModalHistorial from "../Modals/ModalHistorial"
 import ModalEstadisticas from "../Modals/ModalEstadisticas"
 import {currentDatabase} from "../../Database"
-import Notiflix from "notiflix-react"
+import Notiflix from "notiflix"
 
 
 const RegistroHeader = (props)=>{
@@ -44,7 +44,7 @@ const RegistroHeader = (props)=>{
                                             currentDatabase.exportExistingDatabase()
                                         }}  style={props.online ? {display: "none"} : {}}><FontAwesomeIcon icon="download" /> Descargar base de datos</Dropdown.Item>
                                         <Dropdown.Item style={props.online ? {} : {display: "none"}} onClick={() =>{
-                                            Notiflix.Loading.Arrows('Cerrando sesión');
+                                            Notiflix.Loading.arrows('Cerrando sesión');
                                             window.localStorage.removeItem("sessionToken")
                                             window.location.reload()
                                         }}><FontAwesomeIcon icon="sign-out-alt" /> Cerrar sesión</Dropdown.Item>

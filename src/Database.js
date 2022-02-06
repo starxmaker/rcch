@@ -1,6 +1,6 @@
 import initSqlJs from "sql.js";
 import axios from "axios"
-import Notiflix from "notiflix-react"
+import Notiflix from "notiflix"
 
 let currentDatabase
 
@@ -62,7 +62,7 @@ class Database{
               })
              return response.data
             }catch(err){
-                Notiflix.Report.Failure('Información','Sin conexión con el servidor. Vuelva a iniciar sesión','OK');
+                Notiflix.Report.failure('Información','Sin conexión con el servidor. Vuelva a iniciar sesión','OK');
                 return false
             }
     }
@@ -75,7 +75,7 @@ class Database{
               })
              return response.data
             }catch(err){
-                Notiflix.Report.Failure('Información','Sin conexión con el servidor. Vuelva a iniciar sesión','OK');
+                Notiflix.Report.failure('Información','Sin conexión con el servidor. Vuelva a iniciar sesión','OK');
                 return false
             }
     }
@@ -88,7 +88,7 @@ class Database{
               })
              return response.data
             }catch(err){
-                Notiflix.Report.Failure('Información','Sin conexión con el servidor. Vuelva a iniciar sesión','OK');
+                Notiflix.Report.failure('Información','Sin conexión con el servidor. Vuelva a iniciar sesión','OK');
                 return false
             }
     }

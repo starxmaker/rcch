@@ -1,7 +1,7 @@
 import React, {useState} from "react"
 import Record from "../../models/Record"
 import Modal from 'react-bootstrap/Modal'
-import Notiflix from "notiflix-react"
+import Notiflix from "notiflix"
 import Carousel from 'react-bootstrap/Carousel'
 import ChartLabel from "../Otros/ChartLabel"
 
@@ -56,17 +56,20 @@ const ModalEstadisticas= React.forwardRef((props, ref)=>{
 
     React.useImperativeHandle(ref, () => ({
         async handleModalOpen(event){
-            
-            Notiflix.Loading.Arrows('Cargando estadisticas');
+            Notiflix.Loading.arrows('Cargando estadisticas');
             await loadData()
             setShow(true)
-            Notiflix.Loading.Remove()
+            Notiflix.Loading.remove()
         }
     }))
 
     const loadData=async ()=>{
         const stats= await Record.getDailyStats()
-        setEstadisticas(stats)
+        if(stats){
+            console.log(stats)
+            setEstadisticas(stats)
+        }
+        
         
     }
     return (
@@ -80,11 +83,10 @@ const ModalEstadisticas= React.forwardRef((props, ref)=>{
   <Carousel.Item>
   <h1 className="display-5" style={{textAlign: "center"}}>¿Cómo nos fue?</h1>
         <EstadisticasItem label="Cartas" value={estadisticas.cartas} icon="envelope" color={{color:"brown"}}   width="50%"/>
-        <EstadisticasItem label="Publicadores" value={estadisticas.publicadores} icon="hand-paper" color={{color:"green"}}  width="50%" />
         <EstadisticasItem label="Textos" value={estadisticas.textos} icon="book" color={{color:"grey"}}   width="50%"/>
         <EstadisticasItem label="Revisitas" value={estadisticas.revisitas} icon="undo-alt" color={{color:"orange"}}  width="50%" />
         <EstadisticasItem label="Videos" value={estadisticas.videos} icon="film" color={{color:"cyan"}}  width="50%" />
-        <EstadisticasItem label="Publicaciones" value={estadisticas.publicaciones} icon="file-alt" color={{color:"indigo"}}  width="50%" />
+        <EstadisticasItem label="Publicaciones" value={estadisticas.publicaciones} icon="file-alt" color={{color:"indigo"}}  width="100%" />
         
     
   </Carousel.Item>

@@ -1,6 +1,6 @@
 import React, {useEffect} from "react"
 import Modal from 'react-bootstrap/Modal'
-import Notiflix from "notiflix-react"
+import Notiflix from "notiflix"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 

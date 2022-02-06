@@ -1,7 +1,7 @@
 import React, {useEffect} from "react"
 import Modal from 'react-bootstrap/Modal'
 import {currentDatabase} from '../../Database'
-import Notiflix from "notiflix-react"
+import Notiflix from "notiflix"
 
 
 
@@ -28,7 +28,7 @@ const ModalImportDB = React.forwardRef((props, ref) => {
         currentDatabase.importDatabase(files, props.refreshData)
         
         handleModalClose()
-        Notiflix.Report.Success('Información','Base de datos importada con éxito','OK');
+        Notiflix.Report.success('Información','Base de datos importada con éxito','OK');
     }
     
     const handleDrop=(e)=>{
